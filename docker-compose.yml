@@ -1,0 +1,33 @@
+services:
+
+  # Contenedor 1: servidor web Nginx
+  # IP fija: 172.20.0.2  — puerto 80 abierto
+  nginx_p2:
+    image: nginx:latest
+    container_name: nginx_p2
+    networks:
+      p2_net:
+        ipv4_address: 172.20.0.2
+
+  # Contenedor 2: servidor SSH
+  # IP fija: 172.20.0.3  — puerto 22 abierto
+  ssh_p2:
+    image: lscr.io/linuxserver/openssh-server:latest
+    container_name: ssh_p2
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - PASSWORD_ACCESS=true
+      - USER_PASSWORD=kali1234
+      - USER_NAME=kali
+    networks:
+      p2_net:
+        ipv4_address: 172.20.0.3
+
+networks:
+  p2_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+          gateway: 172.20.0.1
